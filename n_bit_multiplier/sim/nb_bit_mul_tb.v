@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
-// Engineer: 
+// Engineer: oktayogutcu
 // 
 // Create Date: 06/27/2023 05:16:18 PM
 // Design Name: 
@@ -22,7 +22,7 @@
 
 module nb_bit_mul_tb 
     #(
-        _BIT_DEPTH = 4
+        _BIT_DEPTH = 32
     )
     (
     
