@@ -22,7 +22,7 @@
 
 module n_bit_mul 
     #(
-    BIT_DEPTH = 32
+    parameter BIT_DEPTH = 32
     )
     (
     input [BIT_DEPTH-1:0] a,

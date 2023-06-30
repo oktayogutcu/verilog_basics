@@ -22,7 +22,7 @@
 
 module nb_bit_mul_tb 
     #(
-        _BIT_DEPTH = 32
+        parameter _BIT_DEPTH = 32
     )
     (
     
@@ -42,6 +42,8 @@ module nb_bit_mul_tb
     );
 
     initial begin
+        $dumpfile("waveform.vcd");
+        $dumpvars(0, nb_bit_mul_tb);
         clk = 0;
         a_in = 0;
         b_in = 0;
