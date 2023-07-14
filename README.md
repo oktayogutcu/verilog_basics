@@ -17,9 +17,11 @@
 
 There is a multiplication simulation of the 32-bit configuration of the module. In the simulation, (2-4-8-16-32)-bit binary number multiplications are tested for two examples each bit depth.
 
+To run the simulation with the Python script named [test.py](https://github.com/oktayogutcu/verilog_basics/blob/main/n_bit_multiplier/test.py), Icarus Verilog for MAC from this [link](https://formulae.brew.sh/formula/icarus-verilog) and for visualization GTKWave from this [link](https://gtkwave.sourceforge.net/.) has to be downloaded.
+
 # 16_bit_multiplier
 
-Non-recursive version of n_bit_multiplier is added for comparison of utilization and functionality.
+A non-recursive version of n_bit_multiplier is added for comparison of utilization and functionality.
 
 <img width="371" alt="util" src="https://github.com/oktayogutcu/verilog_basics/assets/46667326/21569be1-b706-4a7d-8bc2-5adfacb11013">
 
