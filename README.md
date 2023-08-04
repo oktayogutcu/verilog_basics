@@ -31,3 +31,36 @@ It can be seen from the utilization result above, they have used the same amount
 
 Also, the module retains its functionality when comparing the recursive one.
 
+
+# cocotb_example
+
+Cocotb, which stands for Coroutine-based Co-simulation Testbench, is a Python library designed for validating hardware designs crafted in hardware description languages such as Verilog or VHDL. Cocotb seamlessly integrates with simulators, offering advanced capabilities for generating stimuli, validating results, and analyzing functional coverage. This enhances the overall hardware design verification procedure, making it more robust and efficient. Further explanation is [here](https://docs.cocotb.org/en/stable/index.html)
+
+The latest version of Python cocotb library is recommended.
+1) Python 3.6+
+2) GNU Make 3+
+3) A Verilog or VHDL simulator. Simulator support of cocotb documented [here](https://docs.cocotb.org/en/stable/simulator_support.html)
+
+There is a quickstart guide [here](https://docs.cocotb.org/en/stable/quickstart.html). The installation, creating test, creating makefile, and running the test are explained in the quickstart guide.
+
+In the example Verilog module, the up-down counter module is designed. The module outputs the counter value on each clock cycle according to direction (up, down, or idle). Direction input has 2-bit depth. Module counts for the direction value with "01" to up, "11" to down and the rest of the values counter stops at idle mode.
+
+In the cocotb example Python script, 3 test scenarios were implemented and the module was verified.
+
+The console screen after running Python script.
+<img alt="test_console.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test_console.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
+
+1)Test starts with resetting the module, and the direction is defined as up and 50 clock cycle test ran. In each clock cycle the value of the counter is compared to actual values with an assertion.
+
+<img alt="test1.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test1.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
+
+2)Direction changed to down counter.
+
+<img alt="test2.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test2.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
+
+3)Direction changed up and down while the simulation running.
+
+<img alt="test3.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test3.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
+
+
+
