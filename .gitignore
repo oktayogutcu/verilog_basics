@@ -1,1 +1,4 @@
 *.DS_store
+__pycache__/
+sim_build/
+results.xml
