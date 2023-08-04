@@ -48,17 +48,96 @@ In the example Verilog module, the up-down counter module is designed. The modul
 In the cocotb example Python script, 3 test scenarios were implemented and the module was verified.
 
 The console screen after running Python script.
-<img alt="test_console.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test_console.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
+```
+(base) Oktay-MBP:sim oktayogutcu$ make
+rm -f results.xml
+/Library/Developer/CommandLineTools/usr/bin/make -f Makefile results.xml
+mkdir -p sim_build
+/usr/local/bin/iverilog -o sim_build/sim.vvp -D COCOTB_SIM=1 -s updown_counter -f sim_build/cmds.f -g2012   /Users/oktayogutcu/Desktop/repo/rtl/verilog_basics/cocotb_exmaple/sim/../src/simple_design.v
+rm -f results.xml
+MODULE=simple_design_test TESTCASE= TOPLEVEL=updown_counter TOPLEVEL_LANG=verilog \
+         /usr/local/bin/vvp -M /opt/anaconda3/lib/python3.9/site-packages/cocotb/libs -m libcocotbvpi_icarus   sim_build/sim.vvp 
+     -.--ns INFO     gpi                                ..mbed/gpi_embed.cpp:78   in set_program_name_in_venv        Did not detect Python virtual environment. Using system-wide Python interpreter
+     -.--ns INFO     gpi                                ../gpi/GpiCommon.cpp:101  in gpi_print_registered_impl       VPI registered
+     0.00ns INFO     cocotb                             Running on Icarus Verilog version 12.0 (stable)
+     0.00ns INFO     cocotb                             Running tests with cocotb v1.8.0 from /opt/anaconda3/lib/python3.9/site-packages/cocotb
+     0.00ns INFO     cocotb                             Seeding Python random module with 1691180783
+     0.00ns INFO     cocotb.regression                  Found test simple_design_test.up_count_test
+     0.00ns INFO     cocotb.regression                  Found test simple_design_test.down_count_test
+     0.00ns INFO     cocotb.regression                  Found test simple_design_test.updown_count_test
+     0.00ns INFO     cocotb.regression                  running up_count_test (1/3)
+VCD info: dumpfile dump.vcd opened for output.
+Time scale of (updown_counter) is 1ns / 1ns
+   540.00ns INFO     cocotb.regression                  up_count_test passed
+   540.00ns INFO     cocotb.regression                  running down_count_test (2/3)
+  1080.00ns INFO     cocotb.regression                  down_count_test passed
+  1080.00ns INFO     cocotb.regression                  running updown_count_test (3/3)
+  1620.00ns INFO     cocotb.regression                  updown_count_test passed
+  1620.00ns INFO     cocotb.regression                  **********************************************************************************************
+                                                        ** TEST                                  STATUS  SIM TIME (ns)  REAL TIME (s)  RATIO (ns/s) **
+                                                        **********************************************************************************************
+                                                        ** simple_design_test.up_count_test       PASS         540.00           0.01      61734.85  **
+                                                        ** simple_design_test.down_count_test     PASS         540.00           0.01      68459.93  **
+                                                        ** simple_design_test.updown_count_test   PASS         540.00           0.02      30378.48  **
+                                                        **********************************************************************************************
+                                                        ** TESTS=3 PASS=3 FAIL=0 SKIP=0                       1620.00           0.27       5978.40  **
+                                                        **********************************************************************************************
+```
+
 
 1)Test starts with resetting the module, and the direction is defined as up and 50 clock cycle test ran. In each clock cycle the value of the counter is compared to actual values with an assertion.
+
+```python
+async def up_count_test(dut):
+    
+    dut.direction.value = 1
+    
+    cocotb.start_soon(clock_coroutine(dut.clk, 10))
+    
+    await reset_coroutine(dut.reset, 50)
+
+    # run for 50 clock cycle
+    for cnt in range(50): 
+        await RisingEdge(dut.clk)
+        v_count = dut.count.value
+        mod_cnt = cnt % 16
+        assert v_count.integer == mod_cnt, "counter result is incorrect: %s != %s" % (str(dut.count.value), mod_cnt)
+```
 
 <img alt="test1.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test1.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
 
 2)Direction changed to down counter.
 
+```python
+    dut.direction.value = -1
+```
+
 <img alt="test2.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test2.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
 
 3)Direction changed up and down while the simulation running.
+
+```python
+    # set direction signal for counting all directions
+    cocotb.start_soon(updown_direction_coroutine(dut))
+```
+
+```python
+# changing direction to up, down and the idle  
+async def updown_direction_coroutine(dut):
+    dut.direction.value = 0
+    direction_counter = 0
+    # await FallingEdge(dut.reset)
+    while(True):
+        if(direction_counter < 16):
+            dut.direction.value = 1
+        elif(direction_counter < 32):
+            dut.direction.value = -1
+        else:
+            dut.direction.value = 0
+            direction_counter = 0
+        await RisingEdge(dut.clk)
+        direction_counter += 1
+```
 
 <img alt="test3.png" src="https://github.com/oktayogutcu/verilog_basics/blob/main/cocotb_exmaple/sim/test3.png?raw=true" data-hpc="true" class="Box-sc-g0xbh4-0 kzRgrI">
 
